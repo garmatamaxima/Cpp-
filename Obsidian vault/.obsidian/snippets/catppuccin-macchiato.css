@@ -1,0 +1,53 @@
+/* 
+Syntax highlighting: Catppuccin Macchiato
+https://github.com/catppuccin/catppuccin
+*/
+
+body {
+    --code-background: #24273a; /* Code background color */
+    --code-white-space: pre; /* Preserve white spaces */
+    --code-size: 13px; /* Code font size */
+    --code-normal: #CAD3F5; /* Normal text color */
+    --code-comment: #6E738D; /* Comment color */
+    --code-function: #8AADF4; /* Function color */
+    --code-important: #C6A0F6; /* Important element color */
+    --code-keyword: #C6A0F6; /* Keyword color */
+    --code-operator: #8BD5CA; /* Operator color */
+    --code-property: #8AADF4; /* Property color */
+    --code-punctuation: #939AB7; /* Punctuation color */
+    --code-string: #A6DA95; /* String color */
+    --code-tag: #8AADF4; /* HTML tag color */
+    --code-value: #F5A97F; /* Value color */
+}
+
+.markdown-preview-view .token.token.parameter {
+    color: #EE99A0;
+}
+
+.markdown-preview-view .token.arrow.operator {
+    color: #C6A0F6;
+}
+
+.markdown-preview-view .token.hexcode.color {
+    color: #CAD3F5;
+}
+
+.markdown-preview-view .token.class-name {
+    color: #EED49F;
+}
+
+.markdown-preview-view .token.unit {
+    color: #C6A0F6;
+}
+
+.markdown-preview-view .token.selector {
+    color: #8AADF4;
+}
+
+.markdown-preview-view .token.token.builtin {
+    color: #F5A97F;
+}
+
+.markdown-preview-view .token.console {
+    color: #CAD3F5;
+}

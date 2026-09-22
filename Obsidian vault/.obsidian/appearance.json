@@ -1,0 +1,11 @@
+{
+  "theme": "obsidian",
+  "cssTheme": "Wikipedia",
+  "baseFontSize": 17,
+  "enabledCssSnippets": [
+    "primary-bold-white",
+    "github-dark-custom"
+  ],
+  "showViewHeader": true,
+  "showRibbon": true
+}

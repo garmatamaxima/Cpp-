@@ -1,0 +1,6 @@
+/* Primary theme: make bold text white-ish */
+.markdown-rendered strong,
+.markdown-source-view strong,
+.cm-strong {
+    color: #e0d1c5 !important;
+}

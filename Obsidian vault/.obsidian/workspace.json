@@ -1,0 +1,238 @@
+{
+  "main": {
+    "id": "5b818f32772300e9",
+    "type": "split",
+    "children": [
+      {
+        "id": "12d67f74a889ac7a",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "be35e5d48d456b3d",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "C++ ВИВЧЕННЯ/Learning.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Learning"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "137e12c454094e2f",
+    "type": "split",
+    "children": [
+      {
+        "id": "9051a271e9cada65",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "484007f52a3effb6",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "2778426b8dd66c26",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "ea4ea45b139aff72",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Закладки"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "f84e54619da36707",
+    "type": "split",
+    "children": [
+      {
+        "id": "e26434e0e6fa0fe9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f119b7e8d5fb9293",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "C++ ВИВЧЕННЯ/Learning.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Зворотні посилання"
+            }
+          },
+          {
+            "id": "073f1cf5a917b454",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "C++ ВИВЧЕННЯ/Learning.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Вихідні посилання"
+            }
+          },
+          {
+            "id": "0dfa755216064d14",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Мітки"
+            }
+          },
+          {
+            "id": "8118911a055ec23b",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Всі властивості"
+            }
+          },
+          {
+            "id": "63fb7841a95d1c5e",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "C++ ВИВЧЕННЯ/Learning.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          }
+        ],
+        "currentTab": 4
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
+      "obsidian-excalidraw-plugin:New drawing": false
+    }
+  },
+  "active": "be35e5d48d456b3d",
+  "lastOpenFiles": [
+    "C++ ВИВЧЕННЯ/assets/Pasted image 20260806180924.png",
+    "C++ ВИВЧЕННЯ/assets/Pasted image 20260806180902.png",
+    "C++ ВИВЧЕННЯ/assets/Pasted image 20260805212929.png",
+    "МАТЕМАТИКА/Excalidraw-math/Drawing 2026-08-03 18.20.28.excalidraw.md",
+    "Pasted image 20260731104902.png",
+    "МАТЕМАТИКА/вектори.md",
+    "C++ ВИВЧЕННЯ/Learning.md",
+    "Drawing 2026-08-02 08.23.01.excalidraw.md",
+    "C++ ВИВЧЕННЯ/Other C++.md",
+    "C++ ВИВЧЕННЯ/g++.md",
+    "дурня/організована дурня/ch2.md",
+    "C++ ВИВЧЕННЯ/Excalidraw-cpp/definitionAnddeclaration.md",
+    "дурня/ідеї проєктів/backend та frontend на C++ та js.md",
+    "дурня/ідеї проєктів/тетріс на с++.md",
+    "дурня/ідеї проєктів/генератор персональних данних та база данних + gui, додаток на c++.md",
+    "C++ ВИВЧЕННЯ/Excalidraw-cpp/unsigned integer wraparound.md",
+    "C++ ВИВЧЕННЯ/assets/Pasted image 20260729045407.png",
+    "C++ ВИВЧЕННЯ/assets/Pasted image 20260803180056.png",
+    "C++ ВИВЧЕННЯ/assets/Pasted image 20260729045332.png",
+    "C++ ВИВЧЕННЯ/assets/Pasted image 20260729045257.png",
+    "C++ ВИВЧЕННЯ/assets/Pasted image 20260729002838.png",
+    "C++ ВИВЧЕННЯ/assets/Pasted image 20260729000716.png",
+    "C++ ВИВЧЕННЯ/Excalidraw-cpp/signed 1 byte int.md",
+    "C++ ВИВЧЕННЯ/Excalidraw-cpp/scope_namespace.md",
+    "C++ ВИВЧЕННЯ/Excalidraw-cpp/preprocessor include rules.md",
+    "C++ ВИВЧЕННЯ/Excalidraw-cpp/call stack.md",
+    "C++ ВИВЧЕННЯ/Excalidraw-cpp/bits exponential growth.md",
+    "C++ ВИВЧЕННЯ/Excalidraw-cpp/8 bit adresses.md",
+    "дурня/lowkey правда.md",
+    "дурня/Вступ.md",
+    "дурня/КОД НА ОГЛЯД.md",
+    "C++ ВИВЧЕННЯ/adb - android debug.md",
+    "C++ ВИВЧЕННЯ/Windows enviroment variables for powershell cmd . Змінні оточення.md",
+    "path.md",
+    "дурня/Drawing 2026-07-24 02.45.06.excalidraw.md",
+    "C++ ВИВЧЕННЯ/assets",
+    "дурня/організована дурня/trig_cheat_sheet.pdf",
+    "дурня/організована дурня/symbols.pdf",
+    "МАТЕМАТИКА",
+    "learning.cpp",
+    "дурня/Без назви.base",
+    "МАТЕМАТИКА/Excalidraw-math",
+    "дурня/організована дурня",
+    "C++ ВИВЧЕННЯ/Excalidraw-cpp",
+    "Без назви 1.base"
+  ]
+}

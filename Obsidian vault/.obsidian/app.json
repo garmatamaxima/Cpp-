@@ -1,0 +1,15 @@
+{
+  "tabSize": 3,
+  "showInlineTitle": true,
+  "readableLineLength": false,
+  "alwaysUpdateLinks": true,
+  "foldIndent": false,
+  "defaultViewMode": "source",
+  "livePreview": true,
+  "foldHeading": true,
+  "strictLineBreaks": false,
+  "propertiesInDocument": "visible",
+  "showIndentGuide": true,
+  "smartIndentList": true,
+  "showLineNumber": false
+}

@@ -1,0 +1,40 @@
+/* 
+Syntax highlighting: Neon Green
+MIT License
+Copyright (c) 2024 Juanchi Parra
+https://github.com/juanchiparra
+*/
+
+body {
+	--code-background: #030303;
+	--code-white-space: pre-wrap;
+	--code-size: 13px;
+	--code-normal: #00FF00;
+	--code-comment: #3a3a3a;
+	--code-function: #00FF00;
+	--code-important: #ff3c00;
+	--code-keyword: #00FF00;
+	--code-operator: #00FF00;
+	--code-property: #00FF00;
+	--code-punctuation: #00FF00;
+	--code-string: #00FF00;
+	--code-tag: #00FF00;
+	--code-value: #00FF00;
+}
+
+.markdown-preview-view .token {
+	font-weight: 100;
+}
+
+.markdown-preview-view .token.comment,
+.cm-s-obsidian span.cm-comment {
+	font-weight: 400;
+}
+
+.markdown-preview-view .token.function, 
+.markdown-preview-view .token.class-name, 
+.markdown-preview-view .token.selector, 
+.markdown-preview-view .token.builtin,
+.cm-s-obsidian span.cm-builtin {
+	font-weight: 600;
+}
