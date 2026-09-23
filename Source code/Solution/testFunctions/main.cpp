@@ -24,6 +24,9 @@ bool checkPlayerDeath(const Player& player)
 
 int main()
 {
+	penis myPenis{};
+	std::cout << myPenis.getsize();
+
 	bool isDead1{ checkPlayerDeath( Player{ 0,5,5 }) }; // creating rvalue variable with type Player and initial data.
 	bool isDead2{ checkPlayerDeath( { 25,5,5 } )}; // type deduced from type signature, but its very ambiguous..
 	return 0;

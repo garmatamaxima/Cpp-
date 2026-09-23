@@ -13,6 +13,19 @@ enum ColorEnum
 	BLUE,
 };
 
+class penis
+{
+public:
+	float getsize()
+	{
+		return size + 5;
+	}
+
+private:
+	float size{ 10 };
+	float width{ 5 };
+};
+
 struct Color
 {
 	std::uint8_t red{ 0 };
