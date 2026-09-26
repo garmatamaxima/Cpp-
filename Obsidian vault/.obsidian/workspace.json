@@ -11,14 +11,12 @@
             "id": "be35e5d48d456b3d",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "excalidraw",
               "state": {
-                "file": "C++ ВИВЧЕННЯ/Learning.md",
-                "mode": "source",
-                "source": false
+                "file": "Excalidraw/Drawing 2026-09-26 04.39.04.excalidraw.md"
               },
-              "icon": "lucide-file",
-              "title": "Learning"
+              "icon": "excalidraw-icon",
+              "title": "Drawing 2026-09-26 04.39.04.excalidraw"
             }
           }
         ]
@@ -189,13 +187,15 @@
   },
   "active": "be35e5d48d456b3d",
   "lastOpenFiles": [
+    "C++ ВИВЧЕННЯ/Learning.md",
+    "Excalidraw/Drawing 2026-09-26 04.39.04.excalidraw.md",
+    "Excalidraw",
     "C++ ВИВЧЕННЯ/assets/Pasted image 20260806180924.png",
     "C++ ВИВЧЕННЯ/assets/Pasted image 20260806180902.png",
     "C++ ВИВЧЕННЯ/assets/Pasted image 20260805212929.png",
     "МАТЕМАТИКА/Excalidraw-math/Drawing 2026-08-03 18.20.28.excalidraw.md",
     "Pasted image 20260731104902.png",
     "МАТЕМАТИКА/вектори.md",
-    "C++ ВИВЧЕННЯ/Learning.md",
     "Drawing 2026-08-02 08.23.01.excalidraw.md",
     "C++ ВИВЧЕННЯ/Other C++.md",
     "C++ ВИВЧЕННЯ/g++.md",
@@ -232,7 +232,6 @@
     "дурня/Без назви.base",
     "МАТЕМАТИКА/Excalidraw-math",
     "дурня/організована дурня",
-    "C++ ВИВЧЕННЯ/Excalidraw-cpp",
-    "Без назви 1.base"
+    "C++ ВИВЧЕННЯ/Excalidraw-cpp"
   ]
 }

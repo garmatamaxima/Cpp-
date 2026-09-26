@@ -131,10 +131,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="collision.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main.h" />
+    <ClInclude Include="collision.hpp" />
+    <ClInclude Include="constants.hpp" />
+    <ClInclude Include="main.hpp" />
     <ClInclude Include="raylib\include\raylib.h" />
     <ClInclude Include="raylib\include\raymath.h" />
     <ClInclude Include="raylib\include\rlgl.h" />
