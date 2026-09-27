@@ -1,6 +1,6 @@
 #pragma once
-#ifndef COLLISION_TYPEDEFS
-#define COLLISION_TYPEDEFS
+#ifndef COLLISION_H
+#define COLLISION_H
 #pragma once
 
 #include "raylib.h"
@@ -11,61 +11,35 @@ class HitboxAAB
 {
 private:
 
-	struct interval
+	struct box
 	{
-		float min{};
-		float max{};
-		float lenght{};
+		Vector2 min{}; // x,y
+		Vector2 max{}; // x,y
+		Vector2 halfLenght{}; // lenght x /2, lenght y/2.
 	};
 
-	interval x{};
-	interval y{};
-
-	interval xOld{};
-	interval yOld{};
+	box box{};
 
 public:
 
 	// initalises with given side lenghts, creates at position's center
 	HitboxAAB( Vector2 position,  float lenght_x, float lenght_y)
 	{
-		x.lenght = lenght_x;
-		y.lenght = lenght_y;
+		box.halfLenght.x = lenght_x / 2;
+		box.halfLenght.y = lenght_y / 2;
 
-		x.min = position.x - lenght_x / 2;
-		x.max = position.x + lenght_x / 2;
-
-		y.min = position.y - lenght_y / 2;
-		y.max = position.y + lenght_y / 2;
-	}
-
-	// moves to center of position
-	void moveTo(const Vector2& position)
-	{
-		xOld = x;
-		yOld = y;
-
-		x.min = position.x - x.lenght / 2;
-		x.max = position.x + x.lenght / 2;
-
-		y.min = position.y - y.lenght / 2;
-		y.max = position.y + y.lenght / 2;
+		box.min = { box.min.x - box.halfLenght.x, box.min.y - box.halfLenght.y };
+		box.max = { box.min.x + box.halfLenght.x, box.min.y + box.halfLenght.y };
 	}
 
 	// moves hitbox by an offset.
 	void move(const Vector2& offset)
 	{
-		xOld = x;
-		yOld = y;
 
-		x.min += offset.x;
-		x.max += offset.x;
-
-		y.min += offset.y;
-		y.max += offset.y;
 	}
-
 	// implement moving HitboxAAB, collision detection of two hitbox AAB's ( how the detection shall be implemented? check projections? )
+
+	void collisionCheck();
 
 
 };

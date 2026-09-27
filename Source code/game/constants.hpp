@@ -1,6 +1,6 @@
 #pragma once
-#ifndef CONSTANTS_HEADER
-#define CONSTANTS_HEADER
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
 
 #include "raylib.h"
 

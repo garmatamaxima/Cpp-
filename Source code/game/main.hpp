@@ -11,29 +11,27 @@ enum vFunction
 {
     player_moveLEFT,
     player_moveRIGHT,
-    player_JUMP,
-    player_DUCK,
+    player_moveUP,
+    player_moveDOWN,
     player_shoot1,
     player_flyMode,
 	step_through_frames_mode,
     size_enum,
 };
 
+const static std::array<int, (size_t)255> default_keybinds{ KEY_A, KEY_D, KEY_W, KEY_S, KEY_SPACE, KEY_V };
+
+// base class made to be inherited by other specialisations.
 class Entity
 {
 public:
 
+	Vector2 position{};
+	Vector2 direction{};
+	Vector2 velocity{};
+	float angleRad{};
 
-	Vector2 position;
-	Vector2 direction;
-	Vector2 velocity;
-	float angleRad;
-	bool status;
-
-	int id;
-	int size;
-
-	void init(float posX, float posY, int id_, int size_ = 10, float angle = 0, bool status_ = true)
+	Entity(float posX, float posY, int id_, int size_ = 10, float angle = 0, bool status_ = true)
 	{
 		position.x = posX;
 		position.y = posY;
@@ -41,9 +39,6 @@ public:
 		angleRad = angle;
 		direction.x = std::cos(angle);
 		direction.y = std::sin(angle);
-		id = id_;
-		size = size_;
-		status = status_;
 
 		velocity.x = 0;
 		velocity.y = 0;
@@ -54,8 +49,6 @@ public:
 		position.x += velocity.x;
 		position.y += velocity.y;
 	}
-
-
 
 	void setVelocity(const Vector2& velocity_vector)
 	{
@@ -108,27 +101,6 @@ public:
 		direction.y = std::sin(angleRad_);
 	}
 
-	void wraparoundCheck()
-	{
-		if (position.x > worldX)
-		{
-			position.x = 0;
-		}
-		else if (position.x < 0)
-		{
-			position.x = worldX;
-		}
-
-		if (position.y > worldY)
-		{
-			position.y = 0;
-		}
-		else if (position.y < 0)
-		{
-			position.y = worldY;
-		}
-
-	}
 
 };
 
@@ -142,11 +114,12 @@ private:
 	Vector2& direction{ entity.direction };
 
 	float frictionCoeff{ 12 };
-	float frictionCutoff{ 0.5 };
+	constexpr static float frictionCutoff{ 0.5 };
 
 	float maxVelocity{ 400 };
 	float walkAcceleration{ 5000.0f }; // scale with dt to make acceleration consistent
-	float runDirection{ 0 };
+	float runDirectionX{ 0 };
+	float runDirectionY{ 0 };
 
 public:
 
@@ -161,41 +134,95 @@ public:
 	void update()
 	{
 		// check if player is not walking - apply friction.
-		if (runDirection == 0)
+		if (runDirectionX == 0)
 		{
 			velocity.x -= ( velocity.x * frictionCoeff * dt );
 
 			if (velocity.x < frictionCutoff && velocity.x > -frictionCutoff) { velocity.x = 0; }
 		}
 		
+		if (runDirectionY == 0)
+		{
+			velocity.y -= (velocity.y * frictionCoeff * dt);
+
+			if (velocity.y < frictionCutoff && velocity.y > -frictionCutoff) { velocity.y = 0; }
+		}
+
 		// set the run direction to zero to allow friction on next tick
-		runDirection = 0;
+		runDirectionX = 0;
+		runDirectionY = 0;
 		
 		// position updates should be scaled with dt for stability.
 		position += velocity * dt;
 	}
 
-	void walkLeft()
+	// for proper directional movement.
+	void walkKeyboard(float angle)
 	{
-		runDirection = -1;
-		velocity.x = Clamp( velocity.x - (walkAcceleration * dt), -maxVelocity, maxVelocity);
+
 	}
 
+	void shoot()
+	{
+
+	}
+
+	void walkLeft()
+	{
+		runDirectionX = -1;
+		velocity.x = Clamp( velocity.x - (walkAcceleration * dt), -maxVelocity, maxVelocity);
+	}
 	void walkRight()
 	{
-		runDirection = 1;
+		runDirectionX = 1;
 		velocity.x = Clamp( velocity.x + (walkAcceleration * dt), -maxVelocity, maxVelocity);
 	}
 
-	void jump()
+	void walkUp()
 	{
-
+		runDirectionY = -1;
+		velocity.y = Clamp(velocity.y - (walkAcceleration * dt), -maxVelocity, maxVelocity);
+	}
+	void walkDown()
+	{
+		runDirectionY = 1;
+		velocity.y = Clamp(velocity.y + (walkAcceleration * dt), -maxVelocity, maxVelocity);
 	}
 
 	const Vector2& position_{ entity.position };
 	const Vector2& velocity_{ entity.velocity };
 	const Vector2& direction_{ entity.direction };
 
+};
+
+class BulletType
+{
+public:
+	float size{};
+	float velocity{};
+	float lifetime_max{};
+
+	static const std::string name;
+
+	BulletType(std::string name_, float size_, float velocity_, float lifetime_max_)
+	{
+		size = size_;
+		velocity = velocity_;
+		lifetime_max = lifetime_max_;
+	}
+};
+
+class Bullet : public Entity
+{
+	const std::array <Bullet, (size_t)200> bulletsArray{};
+	
+
+
+
+	float lifetime_max{}; // in seconds.
+	float lifetime{};
+
+	Bullet( const Player& shooter, const BulletType& pattern)
 };
 
 class object
@@ -354,16 +381,20 @@ public:
 				break;
 			}
 
-			case player_JUMP: {
-				if (IsKeyDown(keybinds[i].key)) { player.jump(); }
+			case player_moveUP: {
+				if (IsKeyDown(keybinds[i].key)) { player.walkUp(); }
 				break;
 			}
 
-			case player_DUCK: {
-				if (IsKeyDown(keybinds[i].key)) { player.jump(); }
+			case player_moveDOWN: {
+				if (IsKeyDown(keybinds[i].key)) { player.walkDown(); }
 				break;
 			}
+			case player_shoot1: {
+				if (IsKeyDown(keybinds[i].key)) { player.shoot(); }
+				break;
 			}
+		  }
 		}
 	}
 
@@ -374,8 +405,6 @@ private:
 		vFunction vfunction{};
 		int key{};
 	};
-
-	std::array<int, (size_t)255> default_keybinds{ KEY_A, KEY_D, KEY_W, KEY_S, KEY_SPACE, KEY_V };
 
 	std::array<int, (size_t)255> current_keybinds{ default_keybinds };
 

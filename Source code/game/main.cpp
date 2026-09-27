@@ -44,7 +44,7 @@ int main()
 	inputHandler inputHandler{};
 
 	// initalising both player and bullet entities
-	Player player0{ Vector2{225,225}, getNewId() };
+	Player player0{ Vector2{(float)screenWidth/2,(float)screenHeight/2}, getNewId() };
 
 	for (int i1{ 0 }; i1 < projectileLimit; ++i1)
 	{
