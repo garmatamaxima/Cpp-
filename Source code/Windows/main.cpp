@@ -94,12 +94,10 @@ public:
 	linkedList()
 	{
 		head = new node( 0, nullptr);
-		tail = head;
 	}
 	linkedList( Data data_at_head)
 	{
 		head = new node(data_at_head, nullptr);
-		tail = head;
 	}
 
 	// leaks memory.
@@ -108,7 +106,7 @@ public:
 		node* next_{ nullptr };
 		node* thisNode{ head };
 		
-		for (int i{ 0 }; i < indexes; ++i)
+		for (int i{ 0 }; i < indexes+1; ++i)
 		{
 			if (thisNode->next) 
 			{
@@ -129,16 +127,22 @@ public:
 		return traverse(index)->Data;
 	}
 
+	// probably breaks chain and leaks memory.s
 	void append( Data data )
 	{
+		if (!tail && !head->next)
+		{
+			tail = newNode(0, nullptr);
+			head->next = tail;
+		}
 		if (!tail->next)
 		{
-			node* newNode = new node{data,nullptr};
-
-			tail->next = newNode;
-			tail = newNode;
-			indexes += 1;
+			auto newTail = newNode(0, nullptr);
+			tail->next = newTail;
+			tail = newTail;
 		}
+		
+
 	}
 
 	void append_after_head(Data data)
@@ -174,13 +178,14 @@ public:
 
 int main()
 {
+
 	char* start = new char{0};
 	char* trackerStart{ start };
 
-	for (int i{ 0 }; i<170000; ++i)
+	for (int i{ 0 }; i<50000; ++i)
 	{
 		linkedList<int> somedata{ 0 };
-		for (INT64 ii{ 0 }; ii < 1; ++ii)
+		for (INT64 ii{ 0 }; ii < 20; ++ii)
 		{
 			somedata.append(ii);
 		}

@@ -13,13 +13,6 @@
 #include "constants.hpp"
 
 using namespace Globals;
-
-namespace
-{
-	static std::vector<Entity> bullets_bufferVector{};
-	static Entity bullets_buffer[projectileLimit];
-}
-
 int getNewId()
 {
 	int temp = ids;
@@ -45,11 +38,6 @@ int main()
 
 	// initalising both player and bullet entities
 	Player player0{ Vector2{(float)screenWidth/2,(float)screenHeight/2}, getNewId() };
-
-	for (int i1{ 0 }; i1 < projectileLimit; ++i1)
-	{
-		bullets_buffer[i1].init(0, 0, getNewId(), 5, 0, false);
-	}
 
 	// camera
 	Camera2D camera = { 0 };

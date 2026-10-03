@@ -1,7 +1,7 @@
 #pragma once
 #include <chrono>
 
-inline namespace
+inline namespace 
 {
 	// type aliases.
 	using high_resolution_clock = std::chrono::high_resolution_clock;

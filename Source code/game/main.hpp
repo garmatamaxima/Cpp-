@@ -1,23 +1,14 @@
 #pragma once
 
+#include <array>
+
 #include "raylib.h"
 #include "raymath.h"
 #include "rlgl.h"
 
 #include "constants.hpp"
 
-// player's input functions
-enum vFunction
-{
-    player_moveLEFT,
-    player_moveRIGHT,
-    player_moveUP,
-    player_moveDOWN,
-    player_shoot1,
-    player_flyMode,
-	step_through_frames_mode,
-    size_enum,
-};
+int getNewId();
 
 const static std::array<int, (size_t)255> default_keybinds{ KEY_A, KEY_D, KEY_W, KEY_S, KEY_SPACE, KEY_V };
 
@@ -30,8 +21,9 @@ public:
 	Vector2 direction{};
 	Vector2 velocity{};
 	float angleRad{};
+	int id{};
 
-	Entity(float posX, float posY, int id_, int size_ = 10, float angle = 0, bool status_ = true)
+	Entity(float posX = 0, float posY = 0, int id_ = getNewId(), int size_ = 10, float angle = 0, bool status_ = true)
 	{
 		position.x = posX;
 		position.y = posY;
@@ -108,7 +100,7 @@ class Player
 {
 private:
 
-	Entity entity;
+	Entity entity{ 0.0f, 0.0f, getNewId() };
 	Vector2& position{ entity.position };
 	Vector2& velocity{ entity.velocity };
 	Vector2& direction{ entity.direction };
@@ -120,8 +112,24 @@ private:
 	float walkAcceleration{ 5000.0f }; // scale with dt to make acceleration consistent
 	float runDirectionX{ 0 };
 	float runDirectionY{ 0 };
+	
+
+	Vector2 aimDirection{};
+	//offset from world position (as center of game entity) where bullets are created
+	Vector2 weaponOffset{0,5};
 
 public:
+
+	const Vector2& position_{ entity.position };
+	const Vector2& velocity_{ entity.velocity };
+	const Vector2& direction_{ entity.direction };
+	const Vector2& aimDirection_{ aimDirection };
+
+	// returns global world position for projectile start coordinate
+	Vector2 muzzlePosition() const
+	{
+		return Vector2{ position.x + (aimDirection.x * weaponOffset.x), position.y + (aimDirection.y * weaponOffset.y) };
+	}
 
 	Player(Vector2 position_init, int id)
 	{
@@ -177,7 +185,6 @@ public:
 		runDirectionX = 1;
 		velocity.x = Clamp( velocity.x + (walkAcceleration * dt), -maxVelocity, maxVelocity);
 	}
-
 	void walkUp()
 	{
 		runDirectionY = -1;
@@ -188,42 +195,81 @@ public:
 		runDirectionY = 1;
 		velocity.y = Clamp(velocity.y + (walkAcceleration * dt), -maxVelocity, maxVelocity);
 	}
-
-	const Vector2& position_{ entity.position };
-	const Vector2& velocity_{ entity.velocity };
-	const Vector2& direction_{ entity.direction };
-
 };
 
-class BulletType
+
+inline namespace Projectiles
 {
-public:
-	float size{};
-	float velocity{};
-	float lifetime_max{};
 
-	static const std::string name;
+constexpr enum class ProjectileNames
+{
+	fast,
+	slow,
+	pellet,
+	magic
+};
 
-	BulletType(std::string name_, float size_, float velocity_, float lifetime_max_)
+static struct ProjectileType
+{
+	ProjectileNames type;
+	int size;
+	float velocity;
+	float damage;
+	float lifetime_max;
+
+	ProjectileType(ProjectileNames ID, int size_ = 10, float velocity_ = 60, float lifetime_max_ = 3, int damage_ = 5)
 	{
+		type = ID;
 		size = size_;
 		velocity = velocity_;
 		lifetime_max = lifetime_max_;
+		damage = damage_;
 	}
 };
 
-class Bullet : public Entity
+static const ProjectileType fastBall{ ProjectileNames::fast ,10, 350, 1, 20 };
+static const ProjectileType slowBall{ ProjectileNames::slow, 20, 100, 2, 40 };
+static const ProjectileType pellet{ ProjectileNames::pellet, 20, 100, 2, 5 };
+
+class Projectile : public Entity
 {
-	const std::array <Bullet, (size_t)200> bulletsArray{};
-	
-
-
-
+public:
 	float lifetime_max{}; // in seconds.
-	float lifetime{};
+	float lifetime{0};
+	int projectileID{};
+	int damage{1};
+	int size{ 5 };
 
-	Bullet( const Player& shooter, const BulletType& pattern)
+	Projectile(const Player& shooter, const ProjectileType& pattern, unsigned int projectileID_)
+	{
+		direction = shooter.aimDirection_;
+		velocity = shooter.aimDirection_ * pattern.velocity;
+		position = shooter.muzzlePosition();
+		projectileID = projectileID_;
+		lifetime_max = pattern.lifetime_max;
+	}
+
+	// zero constructor
+	Projectile()
+	{
+
+	}
 };
+
+class ProjectileHandler
+{
+private:
+
+	std::array<Projectile, 1000> buffer{};
+	// system for handling storage, creation of projectiles, destruction when lifetime runs out, hitboxes and sprites + effects later? for now
+	// small raylib balls.
+
+
+};
+
+
+
+}
 
 class object
 {
