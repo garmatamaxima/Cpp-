@@ -9,6 +9,9 @@ inline namespace Globals
     int screenWidth = 1600;
     int screenHeight = 900;
 
+    Vector2 playerSpawnPoint{ 1000,1000 };
+
+    auto* GLOBAL_ID = new std::vector<std::pair<int,bool>> ;
 
     constexpr int worldX = 5500;
     constexpr int worldY = 5500;

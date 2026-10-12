@@ -4,6 +4,7 @@
 #include <array>
 #include <map>
 #include <algorithm>
+#include <memory>
 
 #include "raylib.h"
 #include "raymath.h"
@@ -13,38 +14,28 @@
 #include "constants.hpp"
 
 using namespace Globals;
-int getNewId()
-{
-	int temp = ids;
-	ids += 1;
-	return temp;
-}
 
-void drawPointer( const Entity entity )
-{
-	DrawCircle ( entity.position.x + entity.direction.x * 20, entity.position.y + entity.direction.y * 20, 5, DARKGRAY );
-}
+ProjectileData projectile_buffer{ 1000 };
 
 int main()
 {
 	/// setup ///
-
 	InitWindow(screenWidth, screenHeight, "PROGRAM");
 	SetTargetFPS(144);
 
 	/// initalising data ///
 
 	inputHandler inputHandler{};
+	LevelData world;
 
-	// initalising both player and bullet entities
-	Player player0{ Vector2{(float)screenWidth/2,(float)screenHeight/2}, getNewId() };
+	Player player0{ playerSpawnPoint, 0 };
 
 	// camera
 	Camera2D camera = { 0 };
 	Vector2 camera_target{};
 
 	camera.target = player0.position_;
-	camera.offset = player0.position_;
+	camera.offset = Vector2{ (float)screenWidth/2 , (float)screenHeight/2};
 	camera.rotation = 0.0f;
 	camera.zoom = 1.0f;
 
@@ -57,13 +48,16 @@ int main()
 		dt = GetFrameTime();
 		mousePos = GetMousePosition();
 
+
+
 		camera_target = player0.position_;
 		camera.target = camera_target;
 
 		/// logic part
 
-		inputHandler.inputPlayer(player0);
+		inputHandler.inputPlayer(player0, projectile_buffer);
 		player0.update();
+		
 
 		/// Render part
 		
@@ -71,9 +65,10 @@ int main()
 		ClearBackground(RAYWHITE);
 		BeginMode2D(camera);
 
+		projectile_buffer.updateALL();
 
-		//player
-		DrawCircleV(player0.position_, 25, RED);
+
+		DrawCircleV(player0.position_, 25, GREEN);
 		
 		EndMode2D();
 		EndDrawing();

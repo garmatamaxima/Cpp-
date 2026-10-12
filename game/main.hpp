@@ -1,6 +1,8 @@
 #pragma once
 
 #include <array>
+#include <memory>
+#include <unordered_map>
 
 #include "raylib.h"
 #include "raymath.h"
@@ -8,7 +10,23 @@
 
 #include "constants.hpp"
 
-int getNewId();
+#ifndef DRAW_STUPID_PROJECTILES
+#define DRAW_STUPID_PROJECTILES
+
+#endif
+
+int getNewGID();
+using namespace TypeAliases;
+
+enum class vFunction
+{
+	player_moveLEFT,
+	player_moveRIGHT,
+	player_moveUP, 
+	player_moveDOWN,
+	player_shoot1,
+	size_enum,
+};
 
 const static std::array<int, (size_t)255> default_keybinds{ KEY_A, KEY_D, KEY_W, KEY_S, KEY_SPACE, KEY_V };
 
@@ -21,9 +39,8 @@ public:
 	Vector2 direction{};
 	Vector2 velocity{};
 	float angleRad{};
-	int id{};
 
-	Entity(float posX = 0, float posY = 0, int id_ = getNewId(), int size_ = 10, float angle = 0, bool status_ = true)
+	Entity(float posX = 0, float posY = 0, int size_ = 10, float angle = 0, bool status_ = true)
 	{
 		position.x = posX;
 		position.y = posY;
@@ -96,14 +113,25 @@ public:
 
 };
 
-class Player
+class Object2D
+{
+public:
+	Vector2 position;
+	Vector2 direction;
+	float velocity;
+
+	Object2D()
+	{
+		direction.x = std::cos(0);
+		direction.y = std::sin(0);
+	}
+};
+
+class Player : private Entity
 {
 private:
 
-	Entity entity{ 0.0f, 0.0f, getNewId() };
-	Vector2& position{ entity.position };
-	Vector2& velocity{ entity.velocity };
-	Vector2& direction{ entity.direction };
+	int playerID{};
 
 	float frictionCoeff{ 12 };
 	constexpr static float frictionCutoff{ 0.5 };
@@ -116,14 +144,18 @@ private:
 
 	Vector2 aimDirection{};
 	//offset from world position (as center of game entity) where bullets are created
-	Vector2 weaponOffset{0,5};
+	Vector2 weaponOffset{0,0};
+
+	std::array<Vector2, 4> keyboard_keypress_buffer{};
 
 public:
 
-	const Vector2& position_{ entity.position };
-	const Vector2& velocity_{ entity.velocity };
-	const Vector2& direction_{ entity.direction };
+	const Vector2& position_{ position };
+	const Vector2& velocity_{ velocity };
+	const Vector2& direction_{ direction };
 	const Vector2& aimDirection_{ aimDirection };
+
+
 
 	// returns global world position for projectile start coordinate
 	Vector2 muzzlePosition() const
@@ -131,16 +163,24 @@ public:
 		return Vector2{ position.x + (aimDirection.x * weaponOffset.x), position.y + (aimDirection.y * weaponOffset.y) };
 	}
 
-	Player(Vector2 position_init, int id)
+	Player(Vector2 position_init, int player_id_)
 	{
-		entity.id = id;
+		playerID = player_id_;
 		velocity = { 0,0 };
 		position = position_init;
-		entity.setDirection(0.0f);
+		setDirection(0.0f);
+		weaponOffset = { 0, 0 };
+		
 	}
+	Player() {}
 
+	// handles updating player's position, aimDirection and applying friction by reducing velocity
 	void update()
 	{
+		//
+
+
+
 		// check if player is not walking - apply friction.
 		if (runDirectionX == 0)
 		{
@@ -156,25 +196,61 @@ public:
 			if (velocity.y < frictionCutoff && velocity.y > -frictionCutoff) { velocity.y = 0; }
 		}
 
-		// set the run direction to zero to allow friction on next tick
+		// aim direction
+		aimDirection = Vector2Normalize(Vector2{ mousePos.x - screenWidth , mousePos.y - screenHeight });
+		
+		// set the run direction to zero to allow friction on next tick 
 		runDirectionX = 0;
 		runDirectionY = 0;
 		
+		keyboard_keypress_buffer.fill(Vector2{ 0,0 });
+
 		// position updates should be scaled with dt for stability.
 		position += velocity * dt;
 	}
 
-	// for proper directional movement.
-	void walkKeyboard(float angle)
+	enum class moveDirections
 	{
+		LEFT,
+		RIGHT,
+		UP,
+		DOWN,
+	};
+
+	void walkKeyboard(moveDirections Move_direction)
+	{
+		Vector2 direction_result{};
+
+		// select move direction
+		switch (Move_direction)
+		{
+		case moveDirections::LEFT:
+			keyboard_keypress_buffer[0] = Vector2{ -1,0 };
+			break;
+		case moveDirections::RIGHT:
+			keyboard_keypress_buffer[1] = Vector2{ 1,0 };
+			break;
+		case moveDirections::UP:
+			keyboard_keypress_buffer[2] = Vector2{ 0,-1 };
+			break;
+		case moveDirections::DOWN:
+			keyboard_keypress_buffer[3] = Vector2{ 0,1 };
+			break;
+		}
+
+		// combine vector directions.
+		for (int i = 0; i < keyboard_keypress_buffer.size(); ++i)
+		{
+			direction_result = Vector2Normalize(direction_result + keyboard_keypress_buffer[i]);
+		}
+
+		// accelerate player and clamp their max velocity 
+		velocity.x = Clamp(velocity.x + (direction_result.x * walkAcceleration * dt), -maxVelocity, maxVelocity);
+		velocity.y = Clamp(velocity.y + (direction_result.y * walkAcceleration * dt), -maxVelocity, maxVelocity);
+
 
 	}
-
-	void shoot()
-	{
-
-	}
-
+	/*
 	void walkLeft()
 	{
 		runDirectionX = -1;
@@ -195,83 +271,80 @@ public:
 		runDirectionY = 1;
 		velocity.y = Clamp(velocity.y + (walkAcceleration * dt), -maxVelocity, maxVelocity);
 	}
+	*/
 };
-
 
 inline namespace Projectiles
 {
-
-constexpr enum class ProjectileNames
-{
-	fast,
-	slow,
-	pellet,
-	magic
-};
-
-static struct ProjectileType
-{
-	ProjectileNames type;
-	int size;
-	float velocity;
-	float damage;
-	float lifetime_max;
-
-	ProjectileType(ProjectileNames ID, int size_ = 10, float velocity_ = 60, float lifetime_max_ = 3, int damage_ = 5)
+	constexpr enum class ProjectileNames
 	{
-		type = ID;
-		size = size_;
-		velocity = velocity_;
-		lifetime_max = lifetime_max_;
-		damage = damage_;
-	}
-};
+		null,
+		fast,
+		slow,
+		pellet,
+		magic
+	};
 
-static const ProjectileType fastBall{ ProjectileNames::fast ,10, 350, 1, 20 };
-static const ProjectileType slowBall{ ProjectileNames::slow, 20, 100, 2, 40 };
-static const ProjectileType pellet{ ProjectileNames::pellet, 20, 100, 2, 5 };
-
-class Projectile : public Entity
-{
-public:
-	float lifetime_max{}; // in seconds.
-	float lifetime{0};
-	int projectileID{};
-	int damage{1};
-	int size{ 5 };
-
-	Projectile(const Player& shooter, const ProjectileType& pattern, unsigned int projectileID_)
+	class Projectile : public Object2D
 	{
-		direction = shooter.aimDirection_;
-		velocity = shooter.aimDirection_ * pattern.velocity;
-		position = shooter.muzzlePosition();
-		projectileID = projectileID_;
-		lifetime_max = pattern.lifetime_max;
-	}
+	public:
+		float lifetime_max{}; // in seconds.
+		float lifetime{ 0 };
+		float damage{ 1 };
+		int size{ 5 };
+		bool status{ false };
 
-	// zero constructor
-	Projectile()
-	{
+		
+		ProjectileNames TYPE{ ProjectileNames::null };
+		int projectileID{};
 
-	}
-};
+		// projectile type constructor
+		Projectile(ProjectileNames TYPE_, int size_, float velocity_, float lifetime_max_, float damage_ = 5)
+		{
+			lifetime_max = lifetime_max_;
+			velocity = velocity_;
+			TYPE = TYPE_;
+			size = size;
+			lifetime_max = lifetime_max_;
+			damage = damage_;
+		}
 
-class ProjectileHandler
-{
-private:
+		void update()
+		{
+			position.x = position.x + (velocity * direction.x * dt);
+			position.y = position.y + (velocity * direction.y * dt);
+			
+			if (status == true ) lifetime += dt;
+			
+			if (lifetime > lifetime_max)
+			{
+				status = false;
+			}
+#ifdef DRAW_STUPID_PROJECTILES
+			if (status == true) DrawCircle(position.x, position.y, size, BLACK);
+			
+#endif // DRAW_STUPID_PROJECTILES
+		}
 
-	std::array<Projectile, 1000> buffer{};
-	// system for handling storage, creation of projectiles, destruction when lifetime runs out, hitboxes and sprites + effects later? for now
-	// small raylib balls.
+		void Nullify_state()
+		{
+			position = { 0,0 };
+			direction = { 0,0 };
+			velocity = 0;
+			status = false;
+		}
 
+		// zero constructor
+		Projectile() {}
+	};
 
-};
-
-
+	static const Projectile fast{ ProjectileNames::fast, 10, 1220.0f, 1, 25 };
+	static const Projectile slow{ ProjectileNames::slow, 10, 25.0f, 2, 45 };
+	static const Projectile pellet{ ProjectileNames::pellet, 10, 90.0f, 0.5f, 5 };
 
 }
 
-class object
+class ObjectLEGACY
 {
 private:
 
@@ -398,6 +471,78 @@ public:
 
 };
 
+class ProjectileData
+{
+private:
+
+	std::vector<Projectile> projectiles{ 5 };
+	uint32 nextfreeID{};
+
+	// search for next free ID to claim for new projectile creation, can claim more slots.
+	void searchNewFreeID()
+	{
+
+		bool wrap = false;
+
+		for (int64 i{ nextfreeID }; i < projectiles.size();++i)
+		{
+			// check if counter is in limits of uint32 size and less than or equal to projectiles buffer
+			if ( (i < UINT32_MAX) && (i + 1 < projectiles.size()))
+			{
+				if (projectiles.at(i).status == false)
+				{
+					nextfreeID = i;
+					return;
+				}
+			}
+			else
+			{
+  				if (wrap) projectiles.push_back(Projectile{}); // create new projectile into buffer if there is no free Id's
+				// wrap back
+				i = 0;
+				wrap = true;
+			}
+		}
+		
+	}
+
+public:
+	// initalise a buffer of zero initalised projectiles
+	ProjectileData( uint32 buffer_size )
+	{
+		projectiles.reserve(size_t{ buffer_size });
+		uint64 buffersize{ projectiles.size() };
+		
+		//assign ID's
+		for (int64 i{};i < buffersize; ++i)
+		{
+			projectiles.at(i).projectileID = i;
+		}
+		nextfreeID = 0;
+	}
+
+	void createNew(const Projectile& projectile_template, const Player& shooter)
+	{
+		projectiles.at(nextfreeID) = projectile_template;
+		projectiles.at(nextfreeID).direction = shooter.aimDirection_;
+		projectiles.at(nextfreeID).projectileID = nextfreeID;
+		projectiles.at(nextfreeID).position = shooter.muzzlePosition();
+		projectiles.at(nextfreeID).status = true;
+		projectiles.at(nextfreeID).lifetime = 0;
+
+		searchNewFreeID();
+	}
+
+	void updateALL()
+	{
+		uint64 buffersize{ projectiles.size() };
+		for (int64 i{}; i < buffersize; ++i)
+		{
+			projectiles.at(i).update();
+		}
+	}
+};
+
 class inputHandler
 {
 public:
@@ -412,35 +557,35 @@ public:
 		}
 	}
 
-	void inputPlayer(Player& player)
+	void inputPlayer(Player& player, ProjectileData& pdata)
 	{
 		for (int i{ 0 }; i < (int)vFunction::size_enum; ++i)
 		{
 			switch (keybinds[i].vfunction)
 			{
-			case player_moveLEFT: {
-				if (IsKeyDown(keybinds[i].key)) { player.walkLeft(); }
+			case vFunction::player_moveLEFT: {
+				if (IsKeyDown(keybinds[i].key)) { player.walkKeyboard(Player::moveDirections::LEFT); }
 				break;
 			}
-			case player_moveRIGHT: {
-				if (IsKeyDown(keybinds[i].key)) { player.walkRight(); }
-				break;
-			}
-
-			case player_moveUP: {
-				if (IsKeyDown(keybinds[i].key)) { player.walkUp(); }
+			case vFunction::player_moveRIGHT: {
+				if (IsKeyDown(keybinds[i].key)) { player.walkKeyboard(Player::moveDirections::RIGHT); }
 				break;
 			}
 
-			case player_moveDOWN: {
-				if (IsKeyDown(keybinds[i].key)) { player.walkDown(); }
+			case vFunction::player_moveUP: {
+				if (IsKeyDown(keybinds[i].key)) { player.walkKeyboard(Player::moveDirections::UP); }
 				break;
 			}
-			case player_shoot1: {
-				if (IsKeyDown(keybinds[i].key)) { player.shoot(); }
+
+			case vFunction::player_moveDOWN: {
+				if (IsKeyDown(keybinds[i].key)) { player.walkKeyboard(Player::moveDirections::DOWN); }
 				break;
 			}
-		  }
+			case vFunction::player_shoot1: {
+				if (IsKeyPressed(keybinds[i].key)) { pdata.createNew(fast, player); }
+				break;
+			}
+			}
 		}
 	}
 
@@ -456,4 +601,16 @@ private:
 
 	std::array<pair, (size_t)vFunction::size_enum> keybinds{};
 
+};
+
+class LevelData
+{
+private:
+	  
+
+public:
+	LevelData()
+	{
+
+	}
 };
